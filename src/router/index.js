@@ -24,7 +24,7 @@ Vue.use(VueRouter)
         },
         {
           path: '/adminHome/2',
-          component: () => import('../components/Admin/UserManager.vue')   //用户管理
+          component: () => import('../components/Admin/VideoManagerChild.vue')    //视频上传
         }
       ]
     },

@@ -6,7 +6,7 @@
       </el-input>
     </div>
     <div class="carousel">
-      <el-carousel :interval="2000" arrow="always" height="150px">
+      <el-carousel :interval="3000" arrow="always" height="200px">
         <el-carousel-item
           v-for="item in carouselData"
           :key="item.id"
@@ -22,12 +22,12 @@
     <div class="recommend">
       <p class="recommendp">精彩推荐</p>
       <el-row>
-        <el-col :span="4" :xs="12" v-for="item in recommendData" :key="item.id">
+        <el-col :span="4" :xs="12" v-for="item in recommendData" :key="item.id" class="el-row-col">
           <div class="vBox">
             <div class="vimage2">
-              <img :src="item.vimage" :alt="item.vname" @click.native="goDetail(item.id)"/>
+              <img :src="item.vimage" :alt="item.vname" @click="goDetail(item.id)"/>
             </div>
-            <p class="vdetail2">{{item.vname}}</p>
+            <p class="vdetail">{{item.vname}}</p>
           </div>
         </el-col>
       </el-row>
@@ -57,7 +57,7 @@ export default {
       var params = new URLSearchParams();
       params.append("vname", this.videoName);
       this.axios
-        .post("/video/searchVideo", params)
+        .post("/video/search", params)
         .then(res => {
           this.recommendData = res.data.recommendData;
           this.loading = false;
@@ -72,14 +72,17 @@ export default {
         this.$message.error("请先登录！");
         return;
       }
+      console.log(id);
+      console.log(this.$store.state.vid);
       this.loading1 = true;
-      this.$store.commit("goDetail", id);
+      this.$store.commit('goDetail', id);
+      console.log(this.$store.state.vid);
       var params = new URLSearchParams();
       params.append("uid", this.userID);
       params.append("vid", id);
       params.append("vtype", 2);
       this.axios
-        .post("/vlike/lovevideo", params)
+        .post("/vlike/add", params)
         .then(res => {
           this.loading1 = false;
           this.$router.push({ path: "/2" });
@@ -92,8 +95,8 @@ export default {
   mounted() {
     //加载首页数据
     this.loading = true;
-    this.axios
-      .get("/video/getVideoHome")
+    console.log('加载首页数据');
+    this.axios.get("/video/getdata")
       .then(res => {
         this.loading = false;
         this.carouselData = res.data.carouselData;
@@ -123,26 +126,43 @@ export default {
 }
 #container {
   width: 100%;
-  height: 100%;
+  height: auto;
   float: right;
   overflow-y: auto;
 }
 .video-main {
   width: 100%;
-  height: 5%;
+  height: auto;
   overflow: hidden;
 }
 .carousel {
   width: 100%;
-  height: 150px;
+  height: 200px;
 }
 .vimage {
-  width: 80%;
-  height: 125px;
+  width: 100%;
+  text-align: center;
+  height: 175px;
+  overflow: hidden;
+}
+.vimage2 {
+  height: 200px;
+  width: 100%;
+  overflow: hidden;
 }
 .vdetail {
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   height: 25px;
+}
+.vbox {
+  padding: 10px 10px 10px 10px;
+}
+img {
+  width: 100%;
+  height: 100%;
+}
+.el-row-col {
+  padding:5px 5px 5px 5px;
 }
 </style>

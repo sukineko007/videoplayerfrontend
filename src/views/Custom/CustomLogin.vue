@@ -125,7 +125,7 @@ export default {
           if (res.data.state == "error") {
             this.$message.error(res.data.data);
             this.logining = false;
-            throw new Error(res.data.data);
+            return;
           }
           if (res.data.state == "success") {
             this.$message.success("登录成功！");
@@ -134,7 +134,6 @@ export default {
               sessionStorage.clear();
               sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
               this.logining = false;
-              this.$store.commit("userLogin", JSON.stringify(res.data.data));
               this.$router.push({ path: "/" });
             }, 1500);
           }
@@ -168,13 +167,13 @@ export default {
       params.append("usertype", this.userData.usertype);
       this.logining = true;
       this.axios
-        .post("userInfo/add", params)
+        .post("user/add", params)
         .then(res => {
           console.log(res.data);
           if (res.data.state == "error") {
             this.$message.error(res.data.data);
             this.logining = false;
-            throw new Error(res.data.data);
+            return;
           }
           if (res.data.state == "success") {
             this.$message.success("注册成功！");

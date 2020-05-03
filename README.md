@@ -1,4 +1,4 @@
-# videoplayer
+# videoplayerfrontend
 
 ## Project setup
 ```
@@ -10,10 +10,8 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+即可访问 
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+后端工程见
+
+https://github.com/sukineko007/videoplayerbackend

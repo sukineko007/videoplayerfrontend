@@ -86,6 +86,7 @@ export default {
         vname: "",
         vimage: "",
         vpath: "", //视频路径
+        vtype: "",
         vnum: 0, //播放次数
         vscore: 0 //分数
       },
@@ -116,7 +117,7 @@ export default {
       params.append("vid", this.videoData.id);
       params.append("vtype", 1);
       this.axios
-        .post("/vlike/lovevideo", params)
+        .post("/vlike/add", params)
         .then(res => {
           this.$message.success("收藏成功");
           this.loading1 = false;
@@ -131,14 +132,22 @@ export default {
         this.$message.error("请先登录！");
         return;
       }
+      if (!this.vscore || this.vscore == null) {
+        this.$message.error("请先选择评分！");
+        return;
+      }
+      if (!this.vsay || this.vsay == "") {
+        this.$message.error("请输入评论！");
+        return;
+      }
       this.loading1 = true;
       var params = new URLSearchParams();
       params.append("uid", this.userID);
       params.append("vid", this.videoData.id);
-      params.append("vnum", this.vscore);
+      params.append("vscore", this.vscore);
       params.append("vsay", this.vsay);
       this.axios
-        .post("/score/commitscore", params)
+        .post("/score/add", params)
         .then(res => {
           this.$message.success("提交成功");
           this.loading1 = false;
@@ -153,14 +162,23 @@ export default {
     //加载首页数据
     this.loading1 = true;
     var params = new URLSearchParams();
-    params.append("id", this.$store.id);
+    params.append("id", this.$store.state.vid);
     this.axios
       .post("/video/getVideoByID", params)
       .then(res => {
         this.loading1 = false;
         this.videoData = res.data.videoData;
+        var source = {
+          src: this.videoData.vpath,
+          type: this.videoData.vtype
+        };
+        this.playerOptions.sources.push(source);
         this.videoSayData2 = res.data.videoSayData;
-        this.videoSayData = this.videoSayData2.slice(0, 5);
+        if (this.videoSayData2.length > 5) {
+          this.videoSayData = this.videoSayData2.slice(0, 5);
+        } else {
+          this.videoSayData = this.videoSayData2;
+        }
       })
       .catch(err => {
         this.$message.error(err);
@@ -182,6 +200,7 @@ export default {
 .p {
   margin: 0 0 0 0;
   display: inline;
+  margin-left: 20px;
 }
 .videoChildMain {
   width: 100%;
